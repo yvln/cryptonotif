@@ -2,12 +2,23 @@ import React, { Component } from "react";
 
 import { getDatabase } from "../firebase";
 import Form from "./Form";
-// import "./Alert.css";
+import "./Alert.scss";
 
 class Alert extends Component {
   state = {
+    current: undefined,
     isEditing: false
   };
+
+  componentDidMount() {
+    getDatabase()
+      .ref(`/current`)
+      .on("value", snapshot => {
+        this.setState({
+          current: snapshot.val()[this.props.data.asset]
+        });
+      });
+  }
 
   closeForm = () => {
     this.setState({
@@ -28,7 +39,6 @@ class Alert extends Component {
   };
 
   render() {
-    console.log(this.props.data);
     const { data } = this.props;
 
     if (!data) {
@@ -38,21 +48,35 @@ class Alert extends Component {
     return (
       <div className="Alert">
         {this.state.isEditing ? (
-          <>
-            <div onClick={this.closeForm}>Cancel</div>
+          <div className={this.state.isEditing && "AlertForm"}>
+            <button onClick={this.closeForm}>Cancel</button>
             <Form
               initialValues={{
                 data
               }}
               closeForm={this.closeForm}
             />
-          </>
+          </div>
         ) : (
-          <>
-            <div onClick={this.closeAlert}>close</div>
-            <div onClick={this.editAlert}>edit</div>
-            {data.action} {data.amount} {data.asset}
-          </>
+          <div className={!this.state.isEditing && "AlertText"}>
+            <div className="buttons">
+              <button onClick={this.editAlert}>
+                <span role="img" aria-label="edit">
+                  🖊️
+                </span>
+              </button>
+              <button onClick={this.closeAlert}>
+                <span role="img" aria-label="close">
+                  ❌
+                </span>
+              </button>
+            </div>
+            <div>
+              When {data.asset} is {data.action} {data.amount}
+              {data.currency} to: {data.email}
+              {this.state.current && <div>CURRENT: {this.state.current}</div>}
+            </div>
+          </div>
         )}
       </div>
     );

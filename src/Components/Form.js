@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Autosuggest from "react-autosuggest";
 
 import { getDatabase } from "../firebase";
-import "./Form.css";
+import "./Form.scss";
 
 let suggestions;
 const url = "https://rest.coinapi.io/v1/assets";
@@ -10,18 +10,30 @@ const apikey = "6F3ABC62-B928-4F74-8194-24EA076F89C8";
 
 class Form extends Component {
   state = {
+    email: "",
     suggestions: [],
-    valueAction: "under",
-    valueAmount: "",
-    valueAsset: ""
+    action: "under",
+    amount: "",
+    asset: "",
+    currency: "USD"
   };
 
   componentDidMount() {
     if (this.props.initialValues) {
+      const {
+        action,
+        amount,
+        asset,
+        currency,
+        email
+      } = this.props.initialValues.data;
+
       this.setState({
-        valueAction: this.props.initialValues.data.action,
-        valueAmount: this.props.initialValues.data.amount,
-        valueAsset: this.props.initialValues.data.asset
+        action,
+        amount,
+        asset,
+        currency,
+        email
       });
     }
 
@@ -44,28 +56,30 @@ class Form extends Component {
       .catch(err => console.log(err));
   }
 
-  addAlert = e => {
-    const oldValues = this.props.initialValues.data;
+  addOrEditAlert = e => {
     e.preventDefault();
-    const db = getDatabase();
 
-    const oldKey = `${oldValues.action}${oldValues.asset}${oldValues.amount}`;
-    const key = `${this.state.valueAction}${this.state.valueAsset}${
-      this.state.valueAmount
-    }`;
+    const oldValues = this.props.initialValues && this.props.initialValues.data;
+    const oldKey =
+      oldValues && `${oldValues.action}${oldValues.amount}${oldValues.currency}${oldValues.asset}`;
+
+    const db = getDatabase();
+    const { action, amount, asset, currency, email } = this.state;
+    const key = `${action}${amount}${currency}${asset}`;
     const data = {
-      action: this.state.valueAction,
-      asset: this.state.valueAsset,
-      amount: this.state.valueAmount,
+      action,
+      asset,
+      amount,
+      currency,
+      email,
+      emailSent: false,
       key
     };
 
-    if (this.props.initialValues) {
+    // if data change, key change, so I remove instead of editing the existing one.
+    if (oldValues) {
       db.ref(`/alert/${oldKey}`).remove();
-      db.ref().update({
-        [`/alert/${key}`]: data
-      });
-      return this.props.closeForm;
+      this.props.closeForm();
     }
 
     return db.ref(`/alert/${key}`).set(data);
@@ -80,21 +94,15 @@ class Form extends Component {
 
   getSuggestionValue = value => value.label;
 
-  onChangeAction = e => {
+  onChangeInput = (e, key) => {
     this.setState({
-      valueAction: e.target.value
+      [key]: e.target.value
     });
   };
 
-  onChangeAmount = e => {
+  onChangeAsset = (e, { newValue }) => {
     this.setState({
-      valueAmount: e.target.value
-    });
-  };
-
-  onChangeAsset = (event, { newValue }) => {
-    this.setState({
-      valueAsset: newValue
+      asset: newValue
     });
   };
 
@@ -113,51 +121,68 @@ class Form extends Component {
   renderSuggestion = suggestion => <div>{suggestion.label}</div>;
 
   render() {
-    const { valueAction, valueAmount, valueAsset, suggestions } = this.state;
-
+    const { email, action, amount, asset, currency, suggestions } = this.state;
     const inputProps = {
       placeholder: "BTC, ETH, ...",
-      value: valueAsset,
+      value: asset,
       onChange: this.onChangeAsset
     };
 
     return (
-      <div
+      <form
         className={`Form ${
-          this.props.initialValues ? "Form-Edit" : "Form-Create"
+          this.props.initialValues ? "FormEdit" : "FormCreate"
         }`}
+        onSubmit={this.addOrEditAlert}
       >
-        <div className="Content">
-          Alert me when
-          <form onSubmit={this.addAlert}>
-            <Autosuggest
-              suggestions={suggestions}
-              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-              getSuggestionValue={this.getSuggestionValue}
-              renderSuggestion={this.renderSuggestion}
-              inputProps={inputProps}
-            />
-            <select
-              value={valueAction}
-              onChange={this.onChangeAction}
-              name="action"
-              className="menu"
-            >
-              <option value="under">falls under</option>
-              <option value="above">is above</option>
-            </select>
-            <input
-              onChange={this.onChangeAmount}
-              type="number"
-              name="amount"
-              value={valueAmount}
-            />
-            $
-            <input type="submit" value="GO" />
-          </form>
+        <div>Alert me when</div>
+        <Autosuggest
+          suggestions={suggestions.splice(0, 9)}
+          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+          getSuggestionValue={this.getSuggestionValue}
+          renderSuggestion={this.renderSuggestion}
+          inputProps={inputProps}
+        />
+        <select
+          value={action}
+          onChange={e => this.onChangeInput(e, "action")}
+          name="action"
+          className="menuAction"
+        >
+          <option value="under">falls under</option>
+          <option value="above">is above</option>
+        </select>
+        <div>
+          <input
+            onChange={e => this.onChangeInput(e, "amount")}
+            type="number"
+            name="amount"
+            value={amount}
+          />
+
+          <select
+            value={currency}
+            onChange={e => this.onChangeInput(e, "currency")}
+            name="currency"
+            className="menuCurrency"
+          >
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+          </select>
         </div>
-      </div>
+        <div>
+          <span>to </span>
+          <input
+            onChange={e => this.onChangeInput(e, "email")}
+            placeholder="your email"
+            type="email"
+            name="email"
+            value={email}
+          />
+        </div>
+        <input className="Button" type="submit" value="GO" />
+      </form>
     );
   }
 }
