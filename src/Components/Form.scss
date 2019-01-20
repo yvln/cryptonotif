@@ -1,0 +1,131 @@
+.Form {
+  text-align: center;
+
+  input,
+  select {
+    background-color: #e8edef;
+    border: none;
+    padding: 5px;
+  }
+
+  // override default style of Autosuggest component
+  .react-autosuggest__input {
+    z-index: 2;
+  }
+
+  .react-autosuggest__container--open {
+    color: black;
+
+    > .react-autosuggest__suggestions-container {
+      margin: 0 auto;
+
+      left: 50%;
+      transform: translateX(-50%);
+
+      background-color: rgba(255, 255, 255, 0.9);
+
+      > ul {
+        margin: 0;
+        padding: 0;
+
+        > li {
+          list-style-type: none;
+          font-size: 10px;
+          text-align: left;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+          }
+
+          &:not(:last-child) {
+            border-bottom: 1px solid rgba(255, 105, 120, 0.7);
+          }
+        }
+      }
+    }
+  }
+}
+
+.FormCreate {
+  padding: 20px;
+  max-width: 300px;
+  background-color: #e8edef;
+  border: 5px solid #264653;
+  font-size: 20px;
+  margin: 50px auto;
+
+  > * {
+    margin-bottom: 10px;
+  }
+
+  .Button {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    vertical-align: center;
+    font-size: 18px;
+    margin-top: 20px;
+    background-color: #264653;
+    color: white;
+
+    &:hover {
+      border-bottom: 0;
+    }
+  }
+
+  input {
+    height: 20px;
+    border-bottom: 2px solid rgb(255, 105, 120);
+  }
+
+  select {
+    height: 30px;
+    background-color: #6d435a;
+    color: white;
+  }
+
+  // override default style of Autosuggest component
+  .react-autosuggest__input {
+    width: 150px;
+  }
+
+  .react-autosuggest__container--open {
+    position: relative;
+
+    > .react-autosuggest__suggestions-container {
+      position: absolute;
+      line-height: 2em;
+      width: 160px;
+
+      > ul > li {
+        padding-left: 30px;
+      }
+    }
+  }
+
+}
+
+.FormEdit {
+  > * {
+    margin-bottom: 5px;
+  }
+
+  // override default style of Autosuggest component
+  .react-autosuggest__input {
+    width: 70px;
+  }
+
+  .react-autosuggest__container--open {
+    position: relative;
+
+    > .react-autosuggest__suggestions-container {
+      position: absolute;
+      line-height: 1.5em;
+      width: 80px;
+
+      > ul > li {
+        padding-left: 10px;
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+.List {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  @media screen and (min-width: 480px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+}

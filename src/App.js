@@ -4,7 +4,7 @@ import Form from "./Components/Form";
 import List from "./Components/List";
 import { initializeFirebase } from "./firebase";
 
-import "./App.css";
+import "./App.scss";
 
 class App extends Component {
   state = {
@@ -19,13 +19,15 @@ class App extends Component {
   }
 
   render() {
-    return this.state.isInitialized ? (
+    if (!this.state.isInitialized) {
+      return null;
+    }
+
+    return (
       <div className="App">
         <Form />
         <List />
       </div>
-    ) : (
-      "Loading..."
     );
   }
 }

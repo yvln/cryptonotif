@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import { getDatabase } from "../firebase";
 import Alert from "./Alert";
-import "./List.css";
+import "./List.scss";
 
 class List extends Component {
   state = {
@@ -25,7 +25,7 @@ class List extends Component {
       });
   }
 
-  renderAlert = (alert, i) => <Alert key={alert.key} data={alert} />;
+  renderAlert = (alert, i) => <Alert id={i} key={alert.key} data={alert} />;
 
   renderAlertsList = () => {
     return this.state.alerts.map(this.renderAlert);
