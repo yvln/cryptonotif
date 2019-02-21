@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const currentPrice = (dataCoinApi, alerts, database) => {
   return alerts.forEach(alert => {
     if (

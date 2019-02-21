@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const handleAlert = require("./handleAlerts");
 const currentPrice = require("./currentPrice");
 

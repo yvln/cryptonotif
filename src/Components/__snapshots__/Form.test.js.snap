@@ -1,0 +1,110 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`src/Components/Form should render 1`] = `
+<form
+  className="Form FormEdit"
+  onSubmit={[Function]}
+>
+  <div>
+    Alert me when
+  </div>
+  <div
+    aria-expanded={false}
+    aria-haspopup="listbox"
+    aria-owns="react-autowhatever-1"
+    className="react-autosuggest__container"
+    role="combobox"
+  >
+    <input
+      aria-activedescendant={null}
+      aria-autocomplete="list"
+      aria-controls="react-autowhatever-1"
+      autoComplete="off"
+      className="react-autosuggest__input"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      placeholder="BTC, ETH, ..."
+      type="text"
+      value="BTC"
+    />
+    <div
+      className="react-autosuggest__suggestions-container"
+      id="react-autowhatever-1"
+      role="listbox"
+    />
+  </div>
+  <select
+    className="menuAction"
+    name="action"
+    onChange={[Function]}
+    value="above"
+  >
+    <option
+      value="under"
+    >
+      falls under
+    </option>
+    <option
+      value="above"
+    >
+      is above
+    </option>
+  </select>
+  <div>
+    <input
+      name="amount"
+      onChange={[Function]}
+      type="number"
+      value="600"
+    />
+    <select
+      className="menuCurrency"
+      name="currency"
+      onChange={[Function]}
+      value="USD"
+    >
+      <option
+        value="USD"
+      >
+        USD
+      </option>
+      <option
+        value="EUR"
+      >
+        EUR
+      </option>
+    </select>
+  </div>
+  <div>
+    <span>
+      to 
+    </span>
+    <input
+      disabled={
+        Object {
+          "data": Object {
+            "action": "above",
+            "amount": "600",
+            "asset": "BTC",
+            "currency": "USD",
+            "email": "itsme@contact.com",
+          },
+        }
+      }
+      name="email"
+      onChange={[Function]}
+      placeholder="your email"
+      type="email"
+      value="itsme@contact.com"
+    />
+    To update the email address, please create another alert.
+  </div>
+  <input
+    className="Button"
+    type="submit"
+    value="GO"
+  />
+</form>
+`;

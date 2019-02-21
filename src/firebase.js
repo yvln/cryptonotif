@@ -1,5 +1,7 @@
+/* eslint-disable */
+
 const firebase = require("firebase");
-require('dotenv').config();
+require("dotenv").config();
 
 const config = {
   apiKey: process.env.API_KEY,
