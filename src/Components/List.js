@@ -20,7 +20,7 @@ class List extends Component {
         }
 
         return this.setState({
-          alerts: Object.keys(values).map(value => values[value])
+          alerts: Object.values(values)
         });
       });
   }

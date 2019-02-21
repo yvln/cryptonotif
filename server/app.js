@@ -39,12 +39,11 @@ ws.on("message", function incoming(data) {
 
   return database.ref("/alert").on("value", snapshot => {
     const values = snapshot.val();
-    console.log('values', values);
-    const mapData = Object.keys(values).map(value => values[value]);
-
     if (!values) {
       return;
     }
+
+    const mapData = Object.values(values);
 
     handleAlert(JSON.parse(data), mapData, database);
     return currentPrice(JSON.parse(data), mapData, database);
