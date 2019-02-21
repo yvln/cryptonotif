@@ -11,6 +11,7 @@ const apikey = "6F3ABC62-B928-4F74-8194-24EA076F89C8";
 class Form extends Component {
   state = {
     email: "",
+    error: undefined,
     suggestions: [],
     action: "under",
     amount: "",
@@ -58,14 +59,11 @@ class Form extends Component {
 
   addOrEditAlert = e => {
     e.preventDefault();
-
-    const oldValues = this.props.initialValues && this.props.initialValues.data;
-    const oldKey =
-      oldValues && `${oldValues.action}${oldValues.amount}${oldValues.currency}${oldValues.asset}`;
-
     const db = getDatabase();
     const { action, amount, asset, currency, email } = this.state;
-    const key = `${action}${amount}${currency}${asset}`;
+    const key = `${action}${amount}${currency}${asset}${email
+      .split(".")
+      .join("")}`;
     const data = {
       action,
       asset,
@@ -73,13 +71,25 @@ class Form extends Component {
       currency,
       email,
       emailSent: false,
-      key
+      key,
     };
 
-    // if data change, key change, so I remove instead of editing the existing one.
-    if (oldValues) {
-      db.ref(`/alert/${oldKey}`).remove();
-      this.props.closeForm();
+    db.ref(`/alert/${key}`)
+      .once("value")
+      .then(snapshot => {
+        if (snapshot.val()) {
+          return this.setState({
+            error: "This alert has already been created."
+          });
+        }
+      });
+
+    this.setState({
+      error: undefined
+    });
+
+    if (this.props.initialValues) {
+      return db.ref().update({ [`/alert/${key}`]: data });
     }
 
     return db.ref(`/alert/${key}`).set(data);
@@ -135,6 +145,10 @@ class Form extends Component {
         }`}
         onSubmit={this.addOrEditAlert}
       >
+        {!this.props.initialValues && this.state.error && (
+          <div className="error">{this.state.error}</div>
+        )}
+
         <div>Alert me when</div>
         <Autosuggest
           suggestions={suggestions.splice(0, 9)}
@@ -176,10 +190,13 @@ class Form extends Component {
           <input
             onChange={e => this.onChangeInput(e, "email")}
             placeholder="your email"
-            type="email"
             name="email"
+            disabled={this.props.initialValues}
+            type="email"
             value={email}
           />
+          {this.props.initialValues &&
+            "To update the email address, please create another alert."}
         </div>
         <input className="Button" type="submit" value="GO" />
       </form>
