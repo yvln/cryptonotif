@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 var nodemailer = require("nodemailer");
 
 require("dotenv").config();

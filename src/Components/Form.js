@@ -42,19 +42,17 @@ class Form extends Component {
       headers: {
         "X-CoinAPI-Key": apikey
       }
-    })
-      .then(res =>
-        res.json().then(response => {
-          suggestions = response
-            .filter(asset => asset.type_is_crypto === 1)
-            .map(asset => {
-              return {
-                label: asset.asset_id
-              };
-            });
-        })
-      )
-      .catch(err => console.log(err));
+    }).then(res =>
+      res.json().then(response => {
+        suggestions = response
+          .filter(asset => asset.type_is_crypto === 1)
+          .map(asset => {
+            return {
+              label: asset.asset_id
+            };
+          });
+      })
+    );
   }
 
   addOrEditAlert = e => {
@@ -71,7 +69,7 @@ class Form extends Component {
       currency,
       email,
       emailSent: false,
-      key,
+      key
     };
 
     db.ref(`/alert/${key}`)

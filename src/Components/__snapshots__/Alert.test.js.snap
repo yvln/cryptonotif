@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`src/Components/Alert should render 1`] = `
+<div
+  className="Alert"
+>
+  <div
+    className="AlertText"
+  >
+    <div
+      className="buttons"
+    >
+      <button
+        onClick={[Function]}
+      >
+        <span
+          aria-label="edit"
+          role="img"
+        >
+          🖊️
+        </span>
+      </button>
+      <button
+        onClick={[Function]}
+      >
+        <span
+          aria-label="close"
+          role="img"
+        >
+          ❌
+        </span>
+      </button>
+    </div>
+    <div>
+      When 
+      BTC
+       is 
+      above
+       
+      600
+      USD
+       to: 
+      itsme@contact.com
+    </div>
+  </div>
+</div>
+`;
