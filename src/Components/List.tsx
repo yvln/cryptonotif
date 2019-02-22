@@ -4,7 +4,20 @@ import { getDatabase } from "../firebase";
 import Alert from "./Alert";
 import "./List.scss";
 
-class List extends Component {
+type Data = {
+  action: string;
+  amount: string;
+  asset: string;
+  currency: string;
+  email: string;
+  key: string;
+}
+
+type ListState = {
+  alerts: Data[];
+}
+
+class List extends Component<void, ListState> {
   state = {
     alerts: []
   };
@@ -13,6 +26,10 @@ class List extends Component {
     getDatabase()
       .ref("/alert")
       .on("value", snapshot => {
+        if (!snapshot) {
+          return;
+        }
+
         const values = snapshot.val();
 
         if (!values) {
@@ -25,7 +42,7 @@ class List extends Component {
       });
   }
 
-  renderAlert = (alert, i) => <Alert id={i} key={alert.key} data={alert} />;
+  renderAlert = (alert: Data, i: number) => <Alert id={i} key={alert.key} data={alert} />;
 
   renderAlertsList = () => {
     return this.state.alerts.map(this.renderAlert);
