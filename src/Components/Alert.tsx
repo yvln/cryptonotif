@@ -4,7 +4,25 @@ import { getDatabase } from "../firebase";
 import Form from "./Form";
 import "./Alert.scss";
 
-class Alert extends Component {
+type AlertProps = {
+  data: {
+    action: string;
+    amount: string;
+    asset: string;
+    currency: string;
+    email: string;
+    key: string;
+  };
+  id: number;
+  key: string;
+}
+
+type AlertState = {
+  current: string | undefined;
+  isEditing: boolean;
+}
+
+class Alert extends Component<AlertProps, AlertState> {
   state = {
     current: undefined,
     isEditing: false
@@ -14,6 +32,10 @@ class Alert extends Component {
     getDatabase()
       .ref(`/current`)
       .on("value", snapshot => {
+        if (!snapshot) {
+          return;
+        }
+
         this.setState({
           current: snapshot.val()[this.props.data.asset]
         });

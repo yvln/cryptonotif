@@ -4,11 +4,58 @@ import Autosuggest from "react-autosuggest";
 import { getDatabase } from "../firebase";
 import "./Form.scss";
 
-let suggestions;
 const url = "https://rest.coinapi.io/v1/assets";
 const apikey = "6F3ABC62-B928-4F74-8194-24EA076F89C8";
 
-class Form extends Component {
+type FormProps = {
+  closeForm?: () => void;
+  initialValues?: {
+    data: {
+      action: string;
+      amount: string;
+      asset: string;
+      currency: string;
+      email: string;
+      key: string;
+    };
+  };
+};
+
+type InputKey = "action" | "amount" | "currency" | "email";
+
+type Suggestion = {
+  label: string;
+};
+
+type ResponseCoinAPI = {
+  asset_id: string;
+  data_end: Date;
+  data_orderbook_end: Date;
+  data_orderbook_start: Date;
+  data_quote_end: Date;
+  data_quote_start: Date;
+  data_start: Date;
+  data_symbols_count: number;
+  data_trade_count: number;
+  data_trade_end: Date;
+  data_trade_start: Date;
+  name: string;
+  type_is_crypto: number;
+};
+
+type FormState = {
+  error: string | undefined;
+  suggestions: Suggestion[];
+  asset: string;
+} & {
+  // FIX: update type to be more specific
+  // [key in InputKey]: string;
+  [key: string]: any;
+};
+
+let suggestions: Suggestion[];
+
+class Form extends Component<FormProps, FormState> {
   state = {
     email: "",
     error: undefined,
@@ -43,7 +90,7 @@ class Form extends Component {
         "X-CoinAPI-Key": apikey
       }
     }).then(res =>
-      res.json().then(response => {
+      res.json().then((response: ResponseCoinAPI[]) => {
         suggestions = response
           .filter(asset => asset.type_is_crypto === 1)
           .map(asset => {
@@ -55,7 +102,7 @@ class Form extends Component {
     );
   }
 
-  addOrEditAlert = e => {
+  addOrEditAlert = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const db = getDatabase();
     const { action, amount, asset, currency, email } = this.state;
@@ -93,22 +140,30 @@ class Form extends Component {
     return db.ref(`/alert/${key}`).set(data);
   };
 
-  getSuggestions = value => {
+  getSuggestions = (value: string) => {
     const inputValue = value.trim().toUpperCase();
     return !inputValue.length
       ? []
-      : suggestions.filter(suggestion => suggestion.label.includes(inputValue));
+      : suggestions.filter((suggestion: Suggestion) =>
+          suggestion.label.includes(inputValue)
+        );
   };
 
-  getSuggestionValue = value => value.label;
+  getSuggestionValue = (value: Suggestion) => value.label;
 
-  onChangeInput = (e, key) => {
+  onChangeInput = (
+    e: React.FormEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
+    key: InputKey
+  ) => {
     this.setState({
-      [key]: e.target.value
+      [key]: e.currentTarget.value
     });
   };
 
-  onChangeAsset = (e, { newValue }) => {
+  onChangeAsset = (
+    e: React.FormEvent<HTMLInputElement>,
+    { newValue }: { newValue: string }
+  ) => {
     this.setState({
       asset: newValue
     });
@@ -120,13 +175,13 @@ class Form extends Component {
     });
   };
 
-  onSuggestionsFetchRequested = ({ value }) => {
+  onSuggestionsFetchRequested = ({ value }: { value: string }) => {
     this.setState({
       suggestions: this.getSuggestions(value)
     });
   };
 
-  renderSuggestion = suggestion => <div>{suggestion.label}</div>;
+  renderSuggestion = (suggestion: Suggestion) => <div>{suggestion.label}</div>;
 
   render() {
     const { email, action, amount, asset, currency, suggestions } = this.state;
@@ -189,7 +244,7 @@ class Form extends Component {
             onChange={e => this.onChangeInput(e, "email")}
             placeholder="your email"
             name="email"
-            disabled={this.props.initialValues}
+            disabled={!!this.props.initialValues}
             type="email"
             value={email}
           />

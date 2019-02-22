@@ -82,17 +82,7 @@ exports[`src/Components/Form should render 1`] = `
       to 
     </span>
     <input
-      disabled={
-        Object {
-          "data": Object {
-            "action": "above",
-            "amount": "600",
-            "asset": "BTC",
-            "currency": "USD",
-            "email": "itsme@contact.com",
-          },
-        }
-      }
+      disabled={true}
       name="email"
       onChange={[Function]}
       placeholder="your email"
