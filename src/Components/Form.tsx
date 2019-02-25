@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import Autosuggest from "react-autosuggest";
+import React, { Component } from 'react';
+import Autosuggest from 'react-autosuggest';
 
-import { getDatabase } from "../firebase";
-import "./Form.scss";
+import { getDatabase } from '../firebase';
+import './Form.scss';
 
-const url = "https://rest.coinapi.io/v1/assets";
-const apikey = "6F3ABC62-B928-4F74-8194-24EA076F89C8";
+const url = 'https://rest.coinapi.io/v1/assets';
+const apikey = '6F3ABC62-B928-4F74-8194-24EA076F89C8';
 
 type FormProps = {
   closeForm?: () => void;
@@ -21,7 +21,7 @@ type FormProps = {
   };
 };
 
-type InputKey = "action" | "amount" | "currency" | "email";
+type InputKey = 'action' | 'amount' | 'currency' | 'email';
 
 type Suggestion = {
   label: string;
@@ -57,13 +57,13 @@ let suggestions: Suggestion[];
 
 class Form extends Component<FormProps, FormState> {
   state = {
-    email: "",
+    email: '',
     error: undefined,
     suggestions: [],
-    action: "under",
-    amount: "",
-    asset: "",
-    currency: "USD"
+    action: 'under',
+    amount: '',
+    asset: '',
+    currency: 'USD',
   };
 
   componentDidMount() {
@@ -73,7 +73,7 @@ class Form extends Component<FormProps, FormState> {
         amount,
         asset,
         currency,
-        email
+        email,
       } = this.props.initialValues.data;
 
       this.setState({
@@ -81,21 +81,21 @@ class Form extends Component<FormProps, FormState> {
         amount,
         asset,
         currency,
-        email
+        email,
       });
     }
 
     fetch(url, {
       headers: {
-        "X-CoinAPI-Key": apikey
-      }
+        'X-CoinAPI-Key': apikey,
+      },
     }).then(res =>
       res.json().then((response: ResponseCoinAPI[]) => {
         suggestions = response
           .filter(asset => asset.type_is_crypto === 1)
           .map(asset => {
             return {
-              label: asset.asset_id
+              label: asset.asset_id,
             };
           });
       })
@@ -107,8 +107,8 @@ class Form extends Component<FormProps, FormState> {
     const db = getDatabase();
     const { action, amount, asset, currency, email } = this.state;
     const key = `${action}${amount}${currency}${asset}${email
-      .split(".")
-      .join("")}`;
+      .split('.')
+      .join('')}`;
     const data = {
       action,
       asset,
@@ -116,21 +116,22 @@ class Form extends Component<FormProps, FormState> {
       currency,
       email,
       emailSent: false,
-      key
+      key,
     };
 
-    db.ref(`/alert/${key}`)
-      .once("value")
+    db
+      .ref(`/alert/${key}`)
+      .once('value')
       .then(snapshot => {
         if (snapshot.val()) {
           return this.setState({
-            error: "This alert has already been created."
+            error: 'This alert has already been created.',
           });
         }
       });
 
     this.setState({
-      error: undefined
+      error: undefined,
     });
 
     if (this.props.initialValues) {
@@ -156,7 +157,7 @@ class Form extends Component<FormProps, FormState> {
     key: InputKey
   ) => {
     this.setState({
-      [key]: e.currentTarget.value
+      [key]: e.currentTarget.value,
     });
   };
 
@@ -165,19 +166,19 @@ class Form extends Component<FormProps, FormState> {
     { newValue }: { newValue: string }
   ) => {
     this.setState({
-      asset: newValue
+      asset: newValue,
     });
   };
 
   onSuggestionsClearRequested = () => {
     this.setState({
-      suggestions: []
+      suggestions: [],
     });
   };
 
   onSuggestionsFetchRequested = ({ value }: { value: string }) => {
     this.setState({
-      suggestions: this.getSuggestions(value)
+      suggestions: this.getSuggestions(value),
     });
   };
 
@@ -186,21 +187,20 @@ class Form extends Component<FormProps, FormState> {
   render() {
     const { email, action, amount, asset, currency, suggestions } = this.state;
     const inputProps = {
-      placeholder: "BTC, ETH, ...",
+      placeholder: 'BTC, ETH, ...',
       value: asset,
-      onChange: this.onChangeAsset
+      onChange: this.onChangeAsset,
     };
 
     return (
       <form
         className={`Form ${
-          this.props.initialValues ? "FormEdit" : "FormCreate"
+          this.props.initialValues ? 'FormEdit' : 'FormCreate'
         }`}
         onSubmit={this.addOrEditAlert}
       >
-        {!this.props.initialValues && this.state.error && (
-          <div className="error">{this.state.error}</div>
-        )}
+        {!this.props.initialValues &&
+          this.state.error && <div className="error">{this.state.error}</div>}
 
         <div>Alert me when</div>
         <Autosuggest
@@ -213,7 +213,7 @@ class Form extends Component<FormProps, FormState> {
         />
         <select
           value={action}
-          onChange={e => this.onChangeInput(e, "action")}
+          onChange={e => this.onChangeInput(e, 'action')}
           name="action"
           className="menuAction"
         >
@@ -222,7 +222,7 @@ class Form extends Component<FormProps, FormState> {
         </select>
         <div>
           <input
-            onChange={e => this.onChangeInput(e, "amount")}
+            onChange={e => this.onChangeInput(e, 'amount')}
             type="number"
             name="amount"
             value={amount}
@@ -230,7 +230,7 @@ class Form extends Component<FormProps, FormState> {
 
           <select
             value={currency}
-            onChange={e => this.onChangeInput(e, "currency")}
+            onChange={e => this.onChangeInput(e, 'currency')}
             name="currency"
             className="menuCurrency"
           >
@@ -241,7 +241,7 @@ class Form extends Component<FormProps, FormState> {
         <div>
           <span>to </span>
           <input
-            onChange={e => this.onChangeInput(e, "email")}
+            onChange={e => this.onChangeInput(e, 'email')}
             placeholder="your email"
             name="email"
             disabled={!!this.props.initialValues}
@@ -249,7 +249,7 @@ class Form extends Component<FormProps, FormState> {
             value={email}
           />
           {this.props.initialValues &&
-            "To update the email address, please create another alert."}
+            'To update the email address, please create another alert.'}
         </div>
         <input className="Button" type="submit" value="GO" />
       </form>

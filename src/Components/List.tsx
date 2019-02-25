@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import { getDatabase } from "../firebase";
-import Alert from "./Alert";
-import "./List.scss";
+import { getDatabase } from '../firebase';
+import Alert from './Alert';
+import './List.scss';
 
 type Data = {
   action: string;
@@ -11,21 +11,21 @@ type Data = {
   currency: string;
   email: string;
   key: string;
-}
+};
 
 type ListState = {
   alerts: Data[];
-}
+};
 
 class List extends Component<void, ListState> {
   state = {
-    alerts: []
+    alerts: [],
   };
 
   componentDidMount() {
     getDatabase()
-      .ref("/alert")
-      .on("value", snapshot => {
+      .ref('/alert')
+      .on('value', snapshot => {
         if (!snapshot) {
           return;
         }
@@ -37,12 +37,14 @@ class List extends Component<void, ListState> {
         }
 
         return this.setState({
-          alerts: Object.values(values)
+          alerts: Object.values(values),
         });
       });
   }
 
-  renderAlert = (alert: Data, i: number) => <Alert id={i} key={alert.key} data={alert} />;
+  renderAlert = (alert: Data, i: number) => (
+    <Alert id={i} key={alert.key} data={alert} />
+  );
 
   renderAlertsList = () => {
     return this.state.alerts.map(this.renderAlert);

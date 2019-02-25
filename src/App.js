@@ -1,20 +1,20 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import Form from "./Components/Form";
-import List from "./Components/List";
-import { initializeFirebase } from "./firebase";
+import Form from './Components/Form';
+import List from './Components/List';
+import { initializeFirebase } from './firebase';
 
-import "./App.scss";
+import './App.scss';
 
 class App extends Component {
   state = {
-    isInitialized: false
+    isInitialized: false,
   };
 
   componentDidMount() {
     initializeFirebase();
     this.setState({
-      isInitialized: true
+      isInitialized: true,
     });
   }
 
@@ -24,7 +24,6 @@ class App extends Component {
     }
 
     return (
-
       <div className="App">
         <Form />
         <List />

@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import { getDatabase } from "../firebase";
-import Form from "./Form";
-import "./Alert.scss";
+import { getDatabase } from '../firebase';
+import Form from './Form';
+import './Alert.scss';
 
 type AlertProps = {
   data: {
@@ -15,36 +15,36 @@ type AlertProps = {
   };
   id: number;
   key: string;
-}
+};
 
 type AlertState = {
   current: string | undefined;
   isEditing: boolean;
-}
+};
 
 class Alert extends Component<AlertProps, AlertState> {
   state = {
     current: undefined,
-    isEditing: false
+    isEditing: false,
   };
 
   componentDidMount() {
     getDatabase()
       .ref(`/current`)
-      .on("value", snapshot => {
+      .on('value', snapshot => {
         if (!snapshot) {
           return;
         }
 
         this.setState({
-          current: snapshot.val()[this.props.data.asset]
+          current: snapshot.val()[this.props.data.asset],
         });
       });
   }
 
   closeForm = () => {
     this.setState({
-      isEditing: false
+      isEditing: false,
     });
   };
 
@@ -56,7 +56,7 @@ class Alert extends Component<AlertProps, AlertState> {
 
   editAlert = () => {
     this.setState({
-      isEditing: true
+      isEditing: true,
     });
   };
 
@@ -64,23 +64,23 @@ class Alert extends Component<AlertProps, AlertState> {
     const { data } = this.props;
 
     if (!data) {
-      return "Loading...";
+      return 'Loading...';
     }
 
     return (
       <div className="Alert">
         {this.state.isEditing ? (
-          <div className={this.state.isEditing && "AlertForm"}>
+          <div className={this.state.isEditing && 'AlertForm'}>
             <button onClick={this.closeForm}>Cancel</button>
             <Form
               initialValues={{
-                data
+                data,
               }}
               closeForm={this.closeForm}
             />
           </div>
         ) : (
-          <div className={!this.state.isEditing && "AlertText"}>
+          <div className={!this.state.isEditing && 'AlertText'}>
             <div className="buttons">
               <button onClick={this.editAlert}>
                 <span role="img" aria-label="edit">
