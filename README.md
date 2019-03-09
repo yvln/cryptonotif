@@ -2,6 +2,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dd2dc56c2a214eada293fbe95e1c31ba)](https://app.codacy.com/app/yvln/cryptonotif?utm_source=github.com&utm_medium=referral&utm_content=yvln/cryptonotif&utm_campaign=Badge_Grade_Dashboard)
+
 In the project directory, you can run:
 
 ### To start the server
